@@ -1,0 +1,429 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Courier New;}}
+{\*\generator Riched20 10.0.22000}\viewkind4\uc1 
+\pard\f0\fs22 #include <stdio.h>\par
+#include <conio.h>\par
+#include <windows.h>\par
+\par
+#define CAR 1\par
+#define SCOOTER 2\par
+\par
+\par
+struct vehicle\par
+\{\par
+\tab int num ;\par
+\tab int row ;\par
+\tab int col ;\par
+  int type ;\par
+\} ;\par
+\par
+int parkinfo[4][10] ;\par
+int vehcount ;\par
+int carcount ;\par
+int scootercount ;\par
+\par
+void display( ) ;\par
+void changecol ( struct vehicle * ) ;\par
+struct vehicle * add ( int, int, int, int ) ;\par
+void del ( struct vehicle * ) ;\par
+void getfreerowcol ( int, int * ) ;\par
+void getrcbyinfo ( int, int, int * ) ;\par
+void show( ) ;\par
+\par
+\par
+void changecol ( struct vehicle *v )\par
+\{\par
+\tab v -> col = v -> col - 1 ;\par
+\}\par
+\par
+\par
+struct vehicle * add ( int t, int num, int row, int col )\par
+\{\par
+    struct vehicle *v ;\par
+\par
+    v = ( struct vehicle * ) malloc ( sizeof ( struct vehicle ) ) ;\par
+\par
+    v -> type = t ;\par
+    v -> row = row ;\par
+    v -> col = col ;\par
+\par
+\tab   if ( t == CAR )\par
+      carcount++ ;\par
+    else\par
+    \tab scootercount++ ;\par
+\par
+    vehcount++ ;\par
+\tab   parkinfo[row][col] = num ;\par
+\par
+    return v ;\par
+\}\par
+\par
+\par
+void login()\par
+\{\par
+\tab int a=0,i=0;\par
+    char uname[10],c=' ';\par
+    char pword[10],code[10];\par
+    char user[10]="user";\par
+    char pass[10]="pass";\par
+    do\par
+\{\par
+\par
+    printf("\\n  \\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb  LOGIN FIRST  \\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb  ");\par
+    printf(" \\n\\n                       ENTER USERNAME:-");\par
+\tab scanf("%s", &uname);\par
+\tab printf(" \\n\\n                       ENTER PASSWORD:-");\par
+\tab while(i<10)\par
+\tab\{\par
+\tab     pword[i]=getch();\par
+\tab     c=pword[i];\par
+\tab     if(c==13) break;\par
+\tab     else printf("*");\par
+\tab     i++;\par
+\tab\}\par
+\tab pword[i]='\\0';\par
+\par
+\tab i=0;\par
+\par
+\tab\tab if(strcmp(uname,"admin")==0 && strcmp(pword,"admin")==0)\par
+\tab\{\par
+\tab printf("  \\n\\n\\n       WELCOME !! YOUR LOGIN IS SUCCESSFUL");\par
+\tab printf("\\n\\n\\n\\t\\t\\t\\tPress any key to continue...");\par
+\tab getch();//holds the screen\par
+\tab break;\par
+\tab\}\par
+\tab else\par
+\tab\{\par
+\tab\tab printf("\\n        SORRY !!!!  LOGIN IS UNSUCESSFUL");\par
+\tab\tab a++;\par
+\par
+\tab\tab getch();//holds the screen\par
+\par
+\tab\}\par
+\}\par
+\tab while(a<=2);\par
+\tab if (a>2)\par
+\tab\{\par
+\tab\tab printf("\\nSorry you have entered the wrong username and password for four times!!!");\par
+\par
+\tab\tab getch();\par
+\par
+\tab\tab\}\par
+\tab\tab system("cls");\par
+\}\par
+\par
+\par
+void del ( struct vehicle *v )\par
+\{\par
+  int c ;\par
+\par
+\tab for ( c = v -> col ; c < 9 ; c++ )\par
+\tab   parkinfo[v -> row][c] = parkinfo[v -> row][c+1] ;\par
+\par
+\tab parkinfo[v -> row][c] = 0 ;\par
+\par
+\tab if ( v -> type == CAR )\par
+    carcount-- ;\par
+  else\par
+    scootercount-- ;\par
+\par
+\tab vehcount-- ;\par
+\}\par
+\par
+\par
+void getfreerowcol ( int type, int *arr )\par
+\{\par
+  int r, c, fromrow = 0, torow = 2 ;\par
+\par
+  if ( type == SCOOTER )\par
+  \{\par
+    fromrow += 2 ;\par
+    torow += 2 ;\par
+  \}\par
+\par
+\tab for ( r = fromrow ; r < torow ; r++ )\par
+\tab\{\par
+\tab\tab for ( c = 0 ; c < 10 ; c++ )\par
+\tab\tab\{\par
+\tab\tab\tab if ( parkinfo[r][c] == 0 )\par
+\tab\tab\tab\{\par
+\tab\tab\tab\tab arr[0] = r ;\par
+\tab\tab\tab\tab arr[1] = c ;\par
+        return ;\par
+\tab\tab\tab\}\par
+\tab\tab\}\par
+\tab\}\par
+\par
+\tab if ( r == 2 || r == 4 )\par
+\tab\{\par
+   \tab arr[0] = -1 ;\par
+    arr[1] = -1 ;\par
+  \}\par
+\}\par
+\par
+/* get the row-col position for the vehicle with specified number */\par
+void getrcbyinfo ( int type, int num, int *arr )\par
+\{\par
+  int r, c, fromrow = 0, torow = 2 ;\par
+\par
+  if ( type == SCOOTER )\par
+\tab\{\par
+    fromrow += 2 ;\par
+    torow += 2 ;\par
+\tab\}\par
+\par
+\tab for ( r = fromrow ; r < torow ; r++ )\par
+\tab\{\par
+\tab\tab for ( c = 0 ; c < 10 ; c++ )\par
+\tab\tab\{\par
+\tab\tab\tab if ( parkinfo[r][c] == num )\par
+\tab\tab\tab\{\par
+\tab\tab\tab\tab arr[0] = r ;\par
+\tab\tab\tab\tab arr[1] = c ;\par
+        return ;\par
+\tab\tab\tab\}\par
+\tab\tab\}\par
+\tab\}\par
+\par
+\tab if ( r == 2 || r == 4 )\par
+\tab\{\par
+\tab\tab arr[0] = -1 ;\par
+\tab\tab arr[1] = -1 ;\par
+\tab\}\par
+\}\par
+\par
+/* displays list of vehicles parked */\par
+void display( )\par
+\{\par
+  int r, c ;\par
+\par
+  printf ( "\\xdb\\xdb Cars =>\\n" ) ;\par
+\par
+  for ( r = 0 ; r < 4 ; r++ )\par
+  \{\par
+    if ( r == 2 )\par
+\tab\tab   printf ( "\\xdb\\xdbScooters =>\\n" ) ;\par
+\par
+    for ( c = 0 ; c < 10 ; c++ )\par
+      printf ( "%d\\t", parkinfo[r][c] ) ;\par
+    printf ( "\\n" ) ;\par
+\tab\}\par
+\}\par
+\par
+int first( )\par
+\{\par
+\tab printf("\\n\\t\\t\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\n");\par
+\tab printf("\\t\\t\\xdb                                               \\xdb\\n");\par
+\tab printf("\\t\\t\\xdb       =============================           \\xdb\\n");\par
+\tab printf("\\t\\t\\xdb           Car PARKING MANAGEMENT              \\xdb\\n");\par
+\tab printf("\\t\\t\\xdb       =============================           \\xdb\\n");\par
+\tab printf("\\t\\t\\xdb                                               \\xdb\\n");\par
+\tab printf("\\t\\t\\xdb                                               \\xdb\\n");\par
+\tab printf("\\t\\t\\xdb                                               \\xdb\\n");\par
+\tab printf("\\t\\t\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\n\\n\\n");\par
+\tab printf(" \\n\\t Press Any Key To Continue:");\par
+\par
+\tab getch();\par
+    system("cls");\par
+    login();\par
+\}\par
+\par
+\par
+int main( )\par
+\{\par
+\tab int choice, type, number, row = 0, col = 0 ;\par
+\tab int i, tarr[2] ;\par
+\tab int finish = 1 ;\par
+\par
+\par
+\tab struct vehicle *car[2][10] ;\par
+\tab struct vehicle *scooter[2][10] ;\par
+\par
+  system ( "cls" ) ;\par
+\par
+\par
+\tab first();\par
+\tab while ( finish )\par
+\tab\{\par
+\par
+    system ( "cls" ) ;\par
+\tab\tab printf ( "\\n\\t\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb VEHICLE PARKING \\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\n" ) ;\par
+\par
+\tab\tab printf ( "\\n\\t1>> Arrival Of Vehicle\\n" ) ;\par
+\tab\tab printf ( "\\n\\t2>> Total No. Of Vehicles Parked\\n" ) ;\par
+\tab\tab printf ( "\\n\\t3>> Total No. Of Cars Parked\\n" ) ;\par
+\tab\tab printf ( "\\n\\t4>> Total No. Of Scooters Parked\\n" ) ;\par
+\tab\tab printf ( "\\n\\t5>> Display Vehicles Parked (Order)\\n" ) ;\par
+\tab\tab printf ( "\\n\\t6>> Departure Of Vehicle\\n" ) ;\par
+\tab\tab printf ( "\\n\\t7>> Exit\\n" ) ;\par
+\tab\tab printf ("\\n\\t\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb\\xdb");\par
+\tab\tab printf(" \\n\\n Enter Your Choice Here:");\par
+\tab\tab scanf ( "%d", &choice ) ;\par
+\par
+\tab\tab switch ( choice )\par
+\tab\tab\{\par
+\tab\tab\tab case 1 :\par
+          system ( "cls" ) ;\par
+\tab\tab\tab\tab   printf ( "\\n\\t\\xdb\\xdb Add: \\xdb\\xdb \\n" ) ;\par
+\par
+          type = 0 ;\par
+\par
+          /* check for vehicle type */\par
+          while ( type != CAR && type != SCOOTER )\par
+          \{\par
+\tab\tab\tab\tab\tab   printf ( "\\tEnter vehicle type (1 for Car / 2 for Scooter ): \\n" ) ;\par
+            scanf ( "%d", &type ) ;\par
+\tab           if ( type != CAR && type != SCOOTER )\par
+\tab\tab\tab\tab\tab\tab   printf ( "\\nInvalid vehicle type.\\n" ) ;\par
+          \}\par
+\par
+\tab\tab\tab\tab   printf ( "Enter vehicle number: " ) ;\par
+\tab\tab\tab\tab   scanf ( "%d", &number ) ;\par
+\par
+\tab\tab\tab\tab   /* add cars' data */\par
+\tab\tab\tab\tab   if ( type == CAR || type == SCOOTER )\par
+\tab\tab\tab\tab   \{\par
+\tab\tab\tab\tab\tab   getfreerowcol ( type, tarr ) ;\par
+\par
+\tab\tab\tab\tab\tab   if ( tarr[0] != -1 && tarr[1] != -1 )\par
+\tab\tab\tab\tab\tab   \{\par
+\tab\tab\tab\tab\tab\tab   row = tarr[0] ;\par
+\tab\tab\tab\tab\tab\tab   col = tarr[1] ;\par
+\par
+              if ( type == CAR )\par
+                car[row][col] =  add ( type, number, row, col ) ;\par
+              else\par
+\tab\tab\tab\tab\tab\tab\tab   scooter[row - 2][col] = add ( type, number, row, col ) ; ;\par
+            \}\par
+\tab\tab\tab\tab\tab   else\par
+            \{\par
+              if ( type == CAR )\par
+                printf ( "\\nNo parking slot free to park a car\\n" ) ;\par
+              else\par
+                printf ( "\\nNo parking slot free to park a scooter\\n" ) ;\par
+            \}\par
+          \}\par
+\tab\tab\tab\tab   else\par
+\tab\tab\tab\tab   \{\par
+            printf ( "Invalid type\\n" ) ;\par
+\tab\tab\tab\tab\tab   break ;\par
+          \}\par
+\par
+          printf ( "\\nPress any key to continue..." ) ;\par
+          getch( ) ;\par
+\par
+\tab\tab\tab\tab   break ;\par
+\par
+      case 2 :\par
+          system ( "cls" ) ;\par
+\tab\tab\tab\tab   printf ( "Total vehicles parked: %d\\n", vehcount ) ;\par
+          printf ( "\\nPress any key to continue..." ) ;\par
+          getch( ) ;\par
+\tab\tab\tab\tab   break ;\par
+\par
+\tab\tab\tab case 3 :\par
+          system ( "cls" ) ;\par
+\tab\tab\tab\tab   printf ( "Total cars parked: %d\\n", carcount ) ;\par
+          printf ( "\\nPress any key to continue..." ) ;\par
+          getch( ) ;\par
+\tab\tab\tab\tab   break ;\par
+\par
+\tab\tab\tab case 4 :\par
+          system ( "cls" ) ;\par
+\tab\tab\tab\tab   printf ( "Total scooters parked: %d\\n", scootercount ) ;\par
+          printf ( "\\nPress any key to continue..." ) ;\par
+          getch( ) ;\par
+\tab\tab\tab\tab   break ;\par
+\par
+\tab\tab\tab case 5 :\par
+          system ( "cls" ) ;\par
+\tab\tab\tab\tab   printf ( "Display\\n" ) ;\par
+\tab\tab\tab\tab   display( ) ;\par
+          printf ( "\\nPress any key to continue..." ) ;\par
+          getch( ) ;\par
+\tab\tab\tab\tab   break ;\par
+\par
+\tab\tab\tab case 6 :\par
+          system ( "cls" ) ;\par
+\tab\tab\tab\tab   printf ( "Departure\\n" ) ;\par
+          type = 0 ;\par
+          /* check for vehicle type */\par
+          while ( type != CAR && type != SCOOTER )\par
+          \{\par
+\tab\tab\tab\tab\tab   printf ( "Enter vehicle type (1 for Car / 2 for Scooter ): \\n" ) ;\par
+            scanf ( "%d", &type ) ;\par
+\tab           if ( type != CAR && type != SCOOTER )\par
+\tab\tab\tab\tab\tab\tab   printf ( "\\nInvalid vehicle type.\\n" ) ;\par
+          \}\par
+\tab\tab\tab\tab   printf ( "Enter number: "  ) ;\par
+\tab\tab\tab\tab   scanf ( "%d", &number ) ;\par
+\par
+  \tab\tab\tab\tab if ( type == CAR || type == SCOOTER )\par
+\tab   \tab\tab\tab\{\par
+\tab\tab   \tab\tab\tab getrcbyinfo ( type, number, tarr ) ;\par
+\tab\tab\tab   \tab\tab if ( tarr[0] != -1 && tarr[1] != -1 )\par
+\tab\tab\tab\tab   \tab\{\par
+              col = tarr [1] ;\par
+              /* if the vehicle is car */\par
+              if ( type == CAR )\par
+              \{\par
+                row = tarr [0] ;\par
+\tab               del ( car [row][col] ) ;\par
+\tab\tab\tab\tab\tab\tab\tab   for ( i = col ; i < 9 ; i++ )\par
+\tab\tab\tab\tab\tab\tab\tab   \{\par
+\tab\tab\tab\tab\tab\tab\tab\tab   car[row][i] = car[row][i + 1] ;\par
+\tab\tab\tab\tab\tab\tab\tab\tab   changecol ( car[row][i] ) ;\par
+\tab\tab\tab\tab\tab\tab\tab   \}\par
+                free ( car[row][i] ) ;\par
+\tab\tab\tab\tab\tab\tab\tab   car[row][i] = NULL ;\par
+              \}\par
+\tab\tab\tab\tab\tab\tab   /* if a vehicle is scooter */\par
+\tab\tab\tab\tab\tab\tab   else\par
+              \{\par
+                row = tarr[0] - 2 ;\par
+\tab\tab\tab\tab\tab\tab\tab   if ( ! ( row < 0 ) )\par
+\tab\tab\tab\tab\tab\tab\tab   \{\par
+\tab\tab\tab\tab\tab\tab\tab\tab   del ( scooter[row][col] ) ;\par
+\tab\tab\tab\tab\tab\tab\tab\tab   for ( i = col ; i < 9 ; i++ )\par
+\tab\tab\tab\tab\tab\tab\tab\tab   \{\par
+\tab\tab\tab\tab\tab\tab\tab\tab\tab   scooter[row][i] = scooter[row][i + 1] ;\par
+\tab\tab\tab\tab\tab\tab\tab\tab\tab   changecol ( scooter[row][col] ) ;\par
+\tab\tab\tab\tab\tab\tab\tab\tab   \}\par
+\tab\tab\tab\tab\tab\tab\tab\tab   scooter[row][i] = NULL ;\par
+                \}\par
+              \}\par
+            \}\par
+\tab\tab\tab\tab\tab   else\par
+            \{\par
+              if ( type == CAR )\par
+\tab\tab\tab\tab\tab\tab\tab   printf ( "\\nInvalid car number, or a car with such number has not been parked here.\\n" ) ;\par
+              else\par
+                printf ( "\\nInvalid scooter number, or a scooter with such number has not been parked here.\\n" ) ;\par
+            \}\par
+          \}\par
+          printf ( "\\nPress any key to continue..." ) ;\par
+          getch( ) ;\par
+\tab\tab\tab\tab   break ;\par
+\par
+\tab\tab\tab case 7 :\par
+          system ( "cls" ) ;\par
+          for ( row = 0 ; row < 2 ; row++ )\par
+          \{\par
+            for ( col = 0 ; col < 10 ; col++ )\par
+            \{\par
+              if ( car[row][col] -> num != 0 )\par
+                free ( car[row][col] ) ;\par
+              if ( scooter[row][col] -> num != 0 )\par
+\tab\tab\tab\tab\tab\tab\tab   free ( scooter[row+2][col] ) ;\par
+            \}\par
+          \}\par
+\tab\tab\tab\tab   finish = 0 ;\par
+\tab\tab\tab\tab   break ;\par
+    \}\par
+\tab\}\par
+  return 0 ;\par
+\}\par
+\par
+
+\pard\par
+}
+ 
